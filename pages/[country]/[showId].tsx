@@ -42,31 +42,33 @@ export default function ShowDetails({ show }: ShowDetailsProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-    const { showId = '1' } = ctx.query;
+  const { showId = '1' } = ctx.query;
 
-  const response: AxiosResponse<any>  = await axios.get(
-    `https://api.tvmaze.com/shows/${showId}?embed=cast`
-  );
-  
-  const show: Show = { 
-    name: response.data?.name,
-    image: response.data?.image?.original,
-    summary: response.data?.summary,
-    cast: response?.data?._embedded?.cast?.map((cast) => ({
-      id: cast.person?.id,
-      name: cast.person?.name,
-      image: cast.person?.image?.medium || 'https://via.placeholder.com/210x295?text=?'
-    }))
-  }
-
-  // const cast: Cast = response?.data?._embedded?.cast?.map((cast) => ({
-  //   id: cast.person?.id,
-  //   name: cast.person?.name,
-  //   image: cast.person?.image?.medium || 'https://via.placeholder.com/210x295?text=?'
-  // }));
-  return {
-    props: {
-      show
+  try { 
+    const response: AxiosResponse<any>  = await axios.get(
+      `https://api.tvmaze.com/shows/${showId}?embed=cast`
+    );
+    
+    const show: Show = { 
+      name: response.data?.name,
+      image: response.data?.image?.original,
+      summary: response.data?.summary,
+      cast: response?.data?._embedded?.cast?.map((cast) => ({
+        id: cast.person?.id,
+        name: cast.person?.name,
+        image: cast.person?.image?.medium || 'https://via.placeholder.com/210x295?text=?'
+      }))
+    }
+    return {
+      props: {
+        show
+      }
     }
   }
+  catch (error) {
+    return {
+      notFound: true,
+    }
+  }
+  
 }

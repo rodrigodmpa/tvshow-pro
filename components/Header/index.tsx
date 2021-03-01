@@ -1,6 +1,6 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useState, useEffect } from 'react';
 import {useRouter} from 'next/router';
-
+import cookies from 'nookies'
 // import { Container } from './styles';
 const countries = [
   {
@@ -17,7 +17,6 @@ const Header= () => {
   const router = useRouter();
   const [selectedCountry, setSelectedCountry] = useState(router.query.country)
 
-  console.log(router.query);
 
   function handleChange(e: FormEvent) {
     const target = e.target as HTMLInputElement;
@@ -35,6 +34,13 @@ const Header= () => {
         )})
     )
   }
+
+  useEffect(() => {
+    cookies.set(null, 'defaultCountry', String(selectedCountry),{
+      maxAge: 10 * 24 * 60 * 60,
+      path: '/'
+    })
+  }, [selectedCountry])
 
 
   return (
