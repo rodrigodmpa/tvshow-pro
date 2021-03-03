@@ -1,6 +1,6 @@
 import React, { FormEvent, useState, useEffect } from 'react';
 import {useRouter} from 'next/router';
-import cookies from 'nookies'
+// import cookies from 'nookies'
 // import { Container } from './styles';
 const countries = [
   {
@@ -35,12 +35,6 @@ const Header= () => {
     )
   }
 
-  useEffect(() => {
-    cookies.set(null, 'defaultCountry', String(selectedCountry),{
-      maxAge: 10 * 24 * 60 * 60,
-      path: '/'
-    })
-  }, [selectedCountry])
 
 
   return (

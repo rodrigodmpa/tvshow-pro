@@ -1,8 +1,8 @@
 import {useEffect} from 'react';
 import axios, { AxiosResponse } from 'axios';
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, GetStaticPaths, GetStaticProps } from 'next';
 import Thumbnail from '../../components/Thumbnail';
-import cookies from 'nookies';
+// import cookies from 'nookies';
 
 interface Show {
   id: number;
@@ -20,7 +20,7 @@ interface HomeProps {
 
 function Home({shows, country}: HomeProps) {
   const renderShows = () => {
-    return shows.map((show, index) => {
+    return shows?.map((show, index) => {
       return (
         <li key={index}>
           <Thumbnail 
@@ -38,20 +38,19 @@ function Home({shows, country}: HomeProps) {
       {renderShows()}
 
       <style jsx>{`
+        margin: 10px;
         .tvshows {
           display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 10px;
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: 20px;
         }
       `}</style>
     </ul>
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { defaultCountry } = cookies.get(ctx);
-  const country = ctx.query.country || defaultCountry || 'us';
-
+export const getStaticProps: GetStaticProps = async ({params}) => {
+  const country = params.country;
   try {
     const response: AxiosResponse<any> = await axios.get(
       `https://api.tvmaze.com/schedule?country=${country}&date=2014-12-01`
@@ -61,7 +60,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       name: show.show.name,
       image: show.show?.image?.medium || 'https://via.placeholder.com/210x295?text=?'
     }));
-    
+    // console.log(shows)
+    console.log(shows)
+
     return {
       props : {
         shows,
@@ -76,5 +77,17 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   }
   
 }
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [
+      { params: { country: 'us' } },
+      { params: { country: 'br' } }
+    ],
+    fallback: true 
+  };
+}
+
+
 
 export default Home;
