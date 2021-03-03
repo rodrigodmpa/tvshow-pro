@@ -33,7 +33,7 @@ No nosso projeto, queremos mostrar os filmes de países os quais estão em uma A
 
 Para isso, as funções exportadas terão o seguinte formato:
 
-```
+```javascript
 export async function getStaticProps(context) {
   const country = context.params.country;
   const res = await fetch(`https://.../${country}`)
@@ -46,7 +46,28 @@ export async function getStaticProps(context) {
   }
 
   return {
-    props: {}, //será passado para as props do componente da página
+    props: {
+      show: data
+    }, //será passado para as props do componente da página
   }
 }
 ```
+e
+
+```javascript
+export async function getStaticPaths() {
+
+  return {
+     paths: [
+      { params: { country: 'us' } },
+      { params: { country: 'br' } }
+    ],
+    fallback: false ou true ou 'blocking'
+  };
+}
+```
+Neste caso, as páginas /us e /br serão geradas estaticamente com todos os filmes. Por outro lado, caso ousuário acesse um novo país, o NextJS terá três possíveis comportamentos dependendo do fallback:
+
+- false: Todas as rotas novas irão cair em uma página default de Error 404.
+- true: Aparecerá uma página padrão de fallback (normalmente algo como "Carregando ..."), enquanto isso, o Next irá gerar a página estaticamente e quando finalizada, trocará para a página com os dados.
+- 'blocking': Quando uma nova página é requisitada, o Next fará uma requisição server side e enquanto isso a página ainda não terá sido carregada. Quando a página ficar pronta, aparecerá, e ficará estática para as próximas requisições. 
