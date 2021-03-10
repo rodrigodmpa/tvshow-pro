@@ -1,4 +1,4 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Este projeto consiste de um catálogo de séries, que pode ser filtrado por região. Além disso, pode-se clicar na série para ver mais informações e seu elenco.
 
 ## Getting Started
 
